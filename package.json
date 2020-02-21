@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --require @babel/register test/server.js --exit",
-    "build": "babel server.js -d dist",
-    "start": "npm run build && nodemon dist/server.js"
+    "build": "babel ./server/src/  -d ./dist/ ",
+    "start": "npm run build && nodemon dist/server.js",
+    "dev": "babel-watch server/src/server.js"
   },
   "repository": {
     "type": "git",
@@ -26,13 +27,15 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "concurrently": "^5.1.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "sqlite3": "^4.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.4",
     "@babel/preset-env": "^7.8.4",
     "@babel/register": "^7.8.3",
+    "babel-watch": "^7.0.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "mocha": "^7.0.1"
