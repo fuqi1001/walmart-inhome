@@ -7,7 +7,9 @@
     "test": "mocha --require @babel/register test/server.js --exit",
     "build": "babel ./server/src/  -d ./dist/ ",
     "start": "npm run build && nodemon dist/server.js",
-    "dev": "babel-watch server/src/server.js"
+    "dev-server": "babel-watch server/src/server.js",
+    "dev-client": "cd client && npm run start",
+    "dev": "concurrently --kill-others-on-fail \"npm run dev-server\" \"npm run dev-client\""
   },
   "repository": {
     "type": "git",
@@ -31,7 +33,8 @@
     "lodash": "^4.17.15",
     "path": "^0.12.7",
     "regenerator": "^0.14.2",
-    "sqlite3": "^4.1.1"
+    "sqlite3": "^4.1.1",
+    "styled-components": "^5.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
