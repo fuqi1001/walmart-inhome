@@ -4,8 +4,6 @@ var _express = _interopRequireDefault(require("express"));
 
 var _bodyParser = _interopRequireDefault(require("body-parser"));
 
-var _database = _interopRequireDefault(require("./db/database"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var app = (0, _express["default"])();
@@ -14,6 +12,7 @@ app.use(_bodyParser["default"].json());
 app.use(_bodyParser["default"].urlencoded({
   extended: true
 }));
+app.use('/api', require('./api'));
 app.get('/api/hello', function (req, res) {
   res.send({
     ok: 1,
