@@ -1,6 +1,6 @@
-const express = require('express');
-const path = require('path');
-const bodyParser = require('body-parser');
+import express from 'express';
+import bodyParser from 'body-parser';
+
 const app = express();
 const port = process.env.PORT || 8090;
 
@@ -15,3 +15,5 @@ app.get('/api/hello', (req, res) => {
 });
 
 app.listen(port, () => console.log(`Server Started, Listening on port ${port}`));
+
+module.exports = app; 
