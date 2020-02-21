@@ -7,4 +7,19 @@ const db = new sqlite3.Database(dbPath, (err) => {
   }
   console.log('Connected to the database');
 })
+
+// query util
+db.query = function (sql, params) {
+  const that = this;
+  return new Promise((res, rej) => {
+    that.all(sql, params, function(error, rows) {
+      if (error) {
+        rej(error);
+      } else {
+        res({ rows: rows });
+      }
+    })
+  })
+}
+
 module.exports = db;

@@ -1,0 +1,70 @@
+const router = require('express').Router();
+import db from '../db/database';
+import { dbFetchParser } from '../utils/utils';
+var _ = require('lodash');
+
+router.get('/list', async (req, res, next) => {
+  try {
+    const orderListQuery = `
+      SELECT o.id as order_id, o.user_id, u.name as username, oi.item_id, i.name from orders o 
+        left join users u on o.user_id = u.id
+        left join order_items oi on o.id = oi.order_id
+        left join items i on i.id = oi.item_id;
+    `;
+    let result = dbFetchParser(await db.query(orderListQuery, []));
+    // result = _.chain(result).groupBy("order_id").map((value, key) => ({ order_id: key, items: value})).value();
+    result = _.groupBy(result, function(item) {
+      return item.order_id + '#' + item.username
+    });
+    result = _.map(result, function(item) {
+      return {
+        order_id: item[0].order_id,
+        username: item[0].username,
+        items: _.map(item, function(oItem) {
+          return {
+            item_id: oItem.item_id,
+            item_name: oItem.name 
+          }
+        })
+      }
+    })
+    res.status(200).json({ok: 1, data: result});
+  } catch (err) {
+    res.status(500).json({ ok: 0, message: err.message })
+  }
+});
+
+router.get('/:orderId', async (req, res, next) => {
+  try {
+    const { orderId } = req.params;
+    const fetchOrderByOrderId = `
+      SELECT o.id as order_id, o.user_id, u.name as username, oi.item_id, i.name from orders o 
+        left join users u on o.user_id = u.id
+        left join order_items oi on o.id = oi.order_id
+        left join items i on i.id = oi.item_id
+      where order_id=${orderId};
+    `
+    let result = dbFetchParser(await db.query(fetchOrderByOrderId, []));
+    // result = _.chain(result).groupBy("order_id").map((value, key) => ({ order_id: key, items: value})).value();
+    result = _.groupBy(result, function(item) {
+      return item.order_id + '#' + item.username
+    });
+    result = _.map(result, function(item) {
+      return {
+        order_id: item[0].order_id,
+        username: item[0].username,
+        items: _.map(item, function(oItem) {
+          return {
+            item_id: oItem.item_id,
+            item_name: oItem.name 
+          }
+        })
+      }
+    })
+    res.status(200).json({ok: 1, data: result});
+  } catch (err) {
+    res.status(500).json({ ok: 0, message: err.message })
+  }
+})
+
+module.exports = router
