@@ -42,6 +42,7 @@ const ModifyOrderModal = ({...props}) => {
       onCancel={props.close()}
       onOk={handleModify}
       closable={false}
+      title='Modify Order'
     >
       <div>
         <Checkbox.Group 

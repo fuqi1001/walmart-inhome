@@ -10,6 +10,7 @@ const AddModal = ({...props}) => {
     e.preventDefault();
     props.close();
   };
+
   const handleAdd = e => {
     e.preventDefault();
     const reqBody = {
@@ -25,6 +26,7 @@ const AddModal = ({...props}) => {
       onCancel={handleCancel}
       onOk={handleAdd}
       closable={false}
+      title='Add New Item'
     >
       <Input
         onChange={(e) => setItemName(e.target.value)}

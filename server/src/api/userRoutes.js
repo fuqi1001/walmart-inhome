@@ -54,4 +54,17 @@ router.get('/orders/:userId', async (req, res, next) => {
   }
 });
 
+router.post('/', async (req, res, next) => {
+  try {
+    const newUser = req.body.name;
+    const addUserQuery = `INSERT INTO users (name) VALUES ("${newUser}")`;
+    await db.query(addUserQuery, []);
+    const userListQuery = `SELECT * FROM users`;
+    let result = dbFetchParser(await db.query(userListQuery, []));
+    res.status(200).json({ok: 1, data: result});
+  } catch (err) {
+    res.status(500).json({ ok: 0, message: err.message });
+  }
+})
+
 module.exports = router

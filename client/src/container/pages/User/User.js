@@ -1,47 +1,54 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import './User.scss';
 import UserCard from './self/UserCard';
 import { StyledUserCard } from './self/UserCard.styled';
+import AddUserModal from './self/AddUserModal';
 
-class User extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userList: []
-    }
-  }
-
-  async componentDidMount() {
+export default function User() {
+  const [userList, setUserList] = useState([]);
+  const [addModalVisible, setModalVisible] = useState(false);
+  
+  async function fetchUserList() {
     try {
       const response = await axios.get('/api/user/list');
       const data = response.data.data;
-      this.setState({
-        userList: data,
-      })
+      setUserList(data);
     } catch (err){
       window.alert(err);
     }
   }
+  useEffect(() => { fetchUserList() }, []);
 
-  render() {
-    const { userList } = this.state;
-    return (
-      <div className="user">
-        <div className="user-inner">
-          {
-            userList ? userList.map(user => (
-              <UserCard user={user} key={user.id}/>
-            )) : null
-          }
-          <StyledUserCard>
-            <img alt="ava" src="https://img.icons8.com/wired/64/000000/add--v2.png" className="center"/>
-          </StyledUserCard>
-        </div>
-        
-      </div>
-    )
+  async function addItem(req) {
+    try {
+      const response = await axios.post('/api/user', req);
+      const data = response.data.data;
+      setUserList(data);
+    } catch (err) {
+      window.alert(err)
+    }   
   }
-}
 
-export default User;
+  
+  return (
+    <div className="user">
+      <div className="user-inner">
+        {
+          userList ? userList.map(user => (
+            <UserCard user={user} key={user.id}/>
+          )) : null
+        }
+        <StyledUserCard onClick={() => setModalVisible(true)}>
+          <img alt="ava" src="https://img.icons8.com/wired/64/000000/add--v2.png" className="center"/>
+        </StyledUserCard>
+      </div>
+      <AddUserModal
+        modalVisible={addModalVisible}
+        close={() => setModalVisible(false)}
+        onAdd={addItem} 
+      />
+    </div>
+  )
+  
+}
