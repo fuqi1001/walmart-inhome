@@ -75,16 +75,19 @@ router.patch('/:orderId', async (req, res, next) => {
       DELETE FROM order_items where order_id=${orderId};
     `
     await db.query(removeAll, []);
-    let insertNewQuery = 'INSERT INTO order_items VALUES';
-    let value = '';
-    for(let i = 0; i < items.length; i++) {
-      value = value.concat(`(${orderId}, ${items[i]})`); 
-      if (i <= items.length - 2) {
-        value = value.concat(',')
+
+    if (items.length) {
+      let insertNewQuery = 'INSERT INTO order_items VALUES';
+      let value = '';
+      for(let i = 0; i < items.length; i++) {
+        value = value.concat(`(${orderId}, ${items[i]})`); 
+        if (i <= items.length - 2) {
+          value = value.concat(',')
+        }
       }
+      insertNewQuery = insertNewQuery.concat(value).concat(";");
+      await db.query(insertNewQuery, []);
     }
-    insertNewQuery = insertNewQuery.concat(value).concat(";");
-    await db.query(insertNewQuery, []);
     
     res.status(200).json({ok: 1, data: []});
   } catch (err) {
@@ -92,5 +95,36 @@ router.patch('/:orderId', async (req, res, next) => {
     res.status(500).json({ ok: 0, message: err.message })
   }
 })
+
+router.post('/', async (req, res, next) => {
+  try {
+    const { body } = req;
+    const countQuery = 'select count(*) as count from orders;';
+    const currCount = dbFetchParser(await db.query(countQuery, []));
+    
+    const nextOrderId = currCount[0].count + 1;
+    const insertOrderQuery = `
+      INSERT INTO orders values (${nextOrderId}, ${body.user_id});
+    `
+    await db.query(insertOrderQuery, []);
+
+    let insertNewItemsQuery = 'INSERT INTO order_items VALUES';
+    let value = '';
+    const { items } = body;
+    if (items.length) {
+      for(let i = 0; i < items.length; i++) {
+        value = value.concat(`(${nextOrderId}, ${items[i]})`); 
+        if (i <= items.length - 2) {
+          value = value.concat(',')
+        }
+      }
+      insertNewItemsQuery = insertNewItemsQuery.concat(value).concat(";");
+      await db.query(insertNewItemsQuery, []);
+    }
+    res.status(200).json({ok: 1, data: []});
+  } catch (err) {
+    res.status(500).json({ ok: 0, message: err.message })
+  }
+}) 
 
 module.exports = router

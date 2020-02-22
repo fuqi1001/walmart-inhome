@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import axios from 'axios';
 import './Order.scss';
-import { Table, Button } from 'antd';
+import { Table, Button, Icon } from 'antd';
 import ModifyOrderModal from './self/ModifyOrder';
+import AddOrderModal from './self/AddOrder';
 
 class Order extends Component {
   constructor(props) {
@@ -12,6 +13,9 @@ class Order extends Component {
       selectedOrder: null,
       items: [],
       modalId: '1',
+      modalVisble: false,
+      addModalVisible: false,
+      addModalId: new Date().getTime(),
     }
   }
 
@@ -56,6 +60,33 @@ class Order extends Component {
       </Fragment>
     )
   }
+
+  openAddModal = () => {
+    this.setState({
+      addModalVisible: true,
+      modalId: new Date().getTime(),
+    });
+  }
+
+  closeAddModal = () => {
+    this.setState({
+      addModalVisible: false,
+    });
+  }
+
+  handleAddOrder = async req => {
+    try {
+      await axios.post('/api/order', req);
+      const response = await axios.get('/api/order/list');
+      const data = response.data.data;
+      this.setState({
+        orderList: data,
+      })
+    } catch (err) {
+      window.alert(err);
+    }
+    this.closeAddModal();
+  }
   
   openModifyModal = record => {
     const items = record.items.map(item => {return item.item_id})
@@ -77,7 +108,7 @@ class Order extends Component {
   }
 
   render() {
-    const { orderList, modalVisble, selectedOrder, items, modalId } = this.state;
+    const { orderList, modalVisble, selectedOrder, items, modalId, addModalVisible, addModalId } = this.state;
     const columns = [
       {
         title: 'Order ID',
@@ -113,6 +144,9 @@ class Order extends Component {
     return (
       <div className="order">
         <div className="order-inner">
+          <Button type="primary" className="btn-add" size='large' onClick={this.openAddModal}>
+            <Icon type="plus" />
+          </Button>
           <Table
             columns={columns}
             expandedRowRender={this.expandedRowRender}
@@ -127,6 +161,12 @@ class Order extends Component {
           modify={this.handleModifyOrder}
           items={items}
           key={modalId}
+        />
+        <AddOrderModal
+          modalVisible={addModalVisible}
+          close={this.closeAddModal}
+          add={this.handleAddOrder}
+          key={addModalId}
         />
       </div>
     )
