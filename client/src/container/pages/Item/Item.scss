@@ -1,0 +1,22 @@
+.item {
+  width: 100vw;
+  height: 100vh;
+  padding-left: 280px;
+  background-color: aliceblue;
+ 
+  &-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 48px 48px;
+    flex-wrap: wrap;
+    
+    .btn-add {
+      margin-left: 350px;
+      margin-bottom: 24px;
+    }
+  }
+}

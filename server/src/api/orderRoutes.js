@@ -67,4 +67,30 @@ router.get('/:orderId', async (req, res, next) => {
   }
 })
 
+router.patch('/:orderId', async (req, res, next) => {
+  try {
+    const items = req.body;
+    const { orderId } = req.params;
+    const removeAll = `
+      DELETE FROM order_items where order_id=${orderId};
+    `
+    await db.query(removeAll, []);
+    let insertNewQuery = 'INSERT INTO order_items VALUES';
+    let value = '';
+    for(let i = 0; i < items.length; i++) {
+      value = value.concat(`(${orderId}, ${items[i]})`); 
+      if (i <= items.length - 2) {
+        value = value.concat(',')
+      }
+    }
+    insertNewQuery = insertNewQuery.concat(value).concat(";");
+    await db.query(insertNewQuery, []);
+    
+    res.status(200).json({ok: 1, data: []});
+  } catch (err) {
+    console.log(err.message)
+    res.status(500).json({ ok: 0, message: err.message })
+  }
+})
+
 module.exports = router

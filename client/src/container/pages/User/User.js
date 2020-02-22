@@ -1,7 +1,6 @@
-import React, { Component, Provider } from 'react';
+import React, { Component } from 'react';
 import axios from 'axios'
 import './User.scss';
-import { Fragment } from 'react';
 import UserCard from './self/UserCard';
 import { StyledUserCard } from './self/UserCard.styled';
 
@@ -27,7 +26,6 @@ class User extends Component {
 
   render() {
     const { userList } = this.state;
-    console.log(userList)
     return (
       <div className="user">
         <div className="user-inner">
@@ -37,7 +35,7 @@ class User extends Component {
             )) : null
           }
           <StyledUserCard>
-            <img src="https://img.icons8.com/wired/64/000000/add--v2.png" class="center"/>
+            <img alt="ava" src="https://img.icons8.com/wired/64/000000/add--v2.png" className="center"/>
           </StyledUserCard>
         </div>
         

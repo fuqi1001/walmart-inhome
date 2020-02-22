@@ -9,11 +9,11 @@ const Nav = ({ ...props }) => {
         <span role="img" aria-hidden="true">😋</span>
         Users
       </Link>
-      <Link to="/123">
+      <Link to="/order">
         <span role="img" aria-hidden="true">🛒</span>
         Orders
       </Link>
-      <Link to="/">
+      <Link to="/item">
         <span role="img" aria-hidden="true">🥦</span>
         Items
       </Link>
