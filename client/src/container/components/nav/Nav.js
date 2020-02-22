@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const Nav = ({ ...props }) => {
   return (
     <StyledNav {...props}>
-      <Link to="/">
+      <Link to="/user">
         <span role="img" aria-hidden="true">😋</span>
         Users
       </Link>

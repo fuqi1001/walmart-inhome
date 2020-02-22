@@ -6,8 +6,9 @@ var _ = require('lodash');
 router.get('/list', async (req, res, next) => {
   try {
     const listUserQuery = 'SELECT * FROM users';
-    const result = await db.query(listUserQuery, [])
-    res.status(200).json({ ok: 1, data: dbFetchParser(result) })
+    let result = await db.query(listUserQuery, []);
+    result = dbFetchParser(result)
+    res.status(200).json({ ok: 1, data: result })
   } catch (err) {
     res.status(500).json({ ok: 0, message: err })
   }

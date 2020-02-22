@@ -5,6 +5,7 @@ import Nav from '../components/nav/Nav';
 import { GlobalStyles } from '../../global';
 import { ThemeProvider } from 'styled-components';
 import { theme } from '../../theme';
+import User from '../pages/User/User';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Nav />  
         </Fragment>
         <Switch>
+          <Route path="/user" component={User} />
           <Route path="/" component={Home} />
         </Switch>
       </ThemeProvider>

@@ -1,0 +1,17 @@
+.user {
+  width: 100vw;
+  height: 100vh;
+  padding-left: 280px;
+  background-color: aliceblue;
+ 
+  &-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 48px 48px;
+    flex-wrap: wrap;
+  }
+}
