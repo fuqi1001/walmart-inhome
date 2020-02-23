@@ -5,7 +5,7 @@ const { Option } = Select;
 
 const AddOrderModal = ({...props}) => {
   
-  const { modalVisible, onAdd } = props;
+  const { modalVisible } = props;
   const [itemList, setItemList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -65,9 +65,9 @@ const AddOrderModal = ({...props}) => {
       onCancel={handleCancel}
       onOk={handleAdd}
       closable={false}
-      title='Add New Item'
+      title='Add New Order'
     >
-      <Select style={{ width: 120 }} onChange={(val) => setSelectUser(val)} style={{ width: '100%', marginBottom: '24px' }}  placeholder="Select an User">
+      <Select onChange={(val) => setSelectUser(val)} style={{ width: '100%', marginBottom: '24px' }}  placeholder="Select an User">
         {userList.map(user => (<Option value={user.id} key={user.id}>{user.name}</Option>))}
       </Select>
       <div>
