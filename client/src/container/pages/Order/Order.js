@@ -76,14 +76,18 @@ class Order extends Component {
 
   handleAddOrder = async req => {
     try {
-      await axios.post('/api/order', req);
-      const response = await axios.get('/api/order/list');
-      const data = response.data.data;
-      this.setState({
-        orderList: data,
-      })
+      const addRes = await axios.post('/api/order', req);
+      if (addRes.data.ok) {
+        const response = await axios.get('/api/order/list');
+        const data = response.data.data;
+        this.setState({
+          orderList: data,
+        });
+      } else {
+        window.alert(addRes.data.message);  
+      }
     } catch (err) {
-      window.alert(err);
+      window.alert(err.message);
     }
     this.closeAddModal();
   }

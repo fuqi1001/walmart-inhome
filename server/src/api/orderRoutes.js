@@ -8,7 +8,7 @@ router.get('/list', async (req, res, next) => {
     const orderListQuery = `
       SELECT o.id as order_id, o.user_id, u.name as username, oi.item_id, i.name from orders o 
         left join users u on o.user_id = u.id
-        left join order_items oi on o.id = oi.order_id
+        inner join order_items oi on o.id = oi.order_id
         left join items i on i.id = oi.item_id;
     `;
     let result = dbFetchParser(await db.query(orderListQuery, []));
@@ -21,9 +21,12 @@ router.get('/list', async (req, res, next) => {
         order_id: item[0].order_id,
         username: item[0].username,
         items: _.map(item, function(oItem) {
-          return {
-            item_id: oItem.item_id,
-            item_name: oItem.name 
+          // console.log(oItem)
+          if(oItem) {
+            return {
+              item_id: oItem.item_id,
+              item_name: oItem.name 
+            }
           }
         })
       }
@@ -99,9 +102,14 @@ router.patch('/:orderId', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     const { body } = req;
+    const { items } = body;
     const countQuery = 'select count(*) as count from orders;';
     const currCount = dbFetchParser(await db.query(countQuery, []));
     
+    if (!body.user_id || items.length == 0) {
+      throw new Error('Missing user or order items');
+    }
+
     const nextOrderId = currCount[0].count + 1;
     const insertOrderQuery = `
       INSERT INTO orders values (${nextOrderId}, ${body.user_id});
@@ -110,7 +118,7 @@ router.post('/', async (req, res, next) => {
 
     let insertNewItemsQuery = 'INSERT INTO order_items VALUES';
     let value = '';
-    const { items } = body;
+    
     if (items.length) {
       for(let i = 0; i < items.length; i++) {
         value = value.concat(`(${nextOrderId}, ${items[i]})`); 
@@ -123,7 +131,7 @@ router.post('/', async (req, res, next) => {
     }
     res.status(200).json({ok: 1, data: []});
   } catch (err) {
-    res.status(500).json({ ok: 0, message: err.message })
+    res.status(200).json({ ok: 0, message: err.message })
   }
 }) 
 
