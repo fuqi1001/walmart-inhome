@@ -1,21 +1,16 @@
-.order {
+.home {
   width: 100vw;
   height: 100vh;
   padding-left: 280px;
   background-color: aliceblue;
- 
-  &-inner {
-    width: 100%;
+  .inner {
+    padding: 64px 64px;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: 48px 48px;
-    flex-wrap: wrap;
-    .btn-add {
-      margin-left: 700px;
-      margin-bottom: 24px;
-    }
+    font-size: 64px;
+    font-weight: 700;
   }
 }

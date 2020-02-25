@@ -27,13 +27,16 @@ router.get('/:itemId', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     const reqName = req.body.name;
+    if (reqName == '') {
+      throw new Error('Item name required');
+    }
     const addItemQuery = `INSERT INTO items (name) VALUES ("${reqName}")`;
     await db.query(addItemQuery, []);
     const itemListQuery = `SELECT * FROM items`;
     let result = dbFetchParser(await db.query(itemListQuery, []));
     res.status(200).json({ok: 1, data: result});
   } catch (err) {
-    res.status(500).json({ ok: 0, message: err.message })
+    res.status(200).json({ ok: 0, message: err.message })
   }
 })
 

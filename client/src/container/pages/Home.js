@@ -1,10 +1,12 @@
 import React from 'react';
-import './Home.css';
+import './Home.scss';
 
 function Home() {
   return (
     <div className="home">
-      
+      <div className="inner">
+        --- HELLO, Welcome
+      </div>
     </div>
   );
 }

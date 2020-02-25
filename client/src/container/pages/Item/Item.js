@@ -22,6 +22,10 @@ export default function Item() {
   async function addItem(req) {
     try {
       const response = await axios.post('/api/item', req);
+      if (!response.data.ok) {
+        window.alert(response.data.message);
+        return;  
+      }
       const data = response.data.data;
       setItemList(data);
     } catch (err) {
