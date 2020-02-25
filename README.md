@@ -12,7 +12,7 @@ Used package:
 4. babel, nodemon, concurrently
 
 
-Set up step:
+Set up step: [node v8.x required]
   
 1. In the root module, run command  `yarn install` to install dependency for back end service
 2. In the client module, run command  `yarn install` to install dependency for front end application.
